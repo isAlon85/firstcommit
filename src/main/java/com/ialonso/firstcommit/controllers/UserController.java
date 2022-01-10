@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping(ROOT + "/auth/register")
-    @ApiOperation("Register a User in DB with a JSON")
+    @ApiOperation("Register a new User in DB with a JSON")
     public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest signUpRequest) {
         ResponseEntity<MessageResponse> result = userService.register(signUpRequest);
         if (result.getStatusCode().equals(HttpStatus.BAD_REQUEST))

@@ -1,6 +1,9 @@
 package com.ialonso.firstcommit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -12,14 +15,16 @@ public class User {
     @Column
     private Long id;
 
-    @Column
+    @Column (unique = true, nullable = false)
+    @Size(max = 16)
     private String username;
 
-    @Column
-    //@JsonIgnore
+    @Column (nullable = false)
+    @JsonIgnore
     private String password;
 
-    @Column
+    @Column (unique = true, nullable = false)
+    @Size(max = 48)
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
@@ -31,6 +36,16 @@ public class User {
                     @JoinColumn(name = "ROLE_ID") })
 
     private Set<Role> roles;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "USER_STUDENTS",
+            joinColumns = {
+                    @JoinColumn(name = "USER_ID")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "STUDENT_ID") })
+
+    private Set<Student> students;
 
     public User() {
     }
@@ -81,6 +96,14 @@ public class User {
         this.roles = roles;
     }
 
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -89,6 +112,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
+                ", students=" + students +
                 '}';
     }
 }

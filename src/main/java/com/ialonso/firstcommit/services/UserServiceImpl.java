@@ -35,9 +35,9 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
 
     public UserServiceImpl(AuthenticationManager authManager,
-                          UserRepository userRepository,
-                          PasswordEncoder encoder,
-                          JwtTokenUtil jwtTokenUtil){
+                           UserRepository userRepository,
+                           PasswordEncoder encoder,
+                           JwtTokenUtil jwtTokenUtil){
         this.authManager = authManager;
         this.userRepository = userRepository;
         this.encoder = encoder;
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
 
         for (long i = 0; i < userRepository.count(); i++){
             userRepository.findAll().iterator().next().setRoles(null);
-            }
+        }
         userRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
@@ -181,4 +181,3 @@ public class UserServiceImpl implements UserService {
     }
 
 }
-

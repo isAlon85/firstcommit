@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateToken(authentication);
         Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
-        return ResponseEntity.ok(new JwtResponse(jwt, user.get().getRoles()));
+        return ResponseEntity.ok(new JwtResponse(jwt, user.get().getUsername(), user.get().getRoles()));
     }
 
     @Override

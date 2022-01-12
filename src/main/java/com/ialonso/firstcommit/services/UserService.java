@@ -1,6 +1,5 @@
 package com.ialonso.firstcommit.services;
 
-
 import com.ialonso.firstcommit.entities.User;
 import com.ialonso.firstcommit.security.payload.JwtResponse;
 import com.ialonso.firstcommit.security.payload.LoginRequest;

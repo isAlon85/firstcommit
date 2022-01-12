@@ -44,7 +44,7 @@ public class Student {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Resume resume;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "STUDENT_TAGS",
             joinColumns = {
                     @JoinColumn(name = "STUDENT_ID")
@@ -54,10 +54,14 @@ public class Student {
 
     private Set<Tag> tags;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    private User user;
+
     public Student() {
     }
 
-    public Student(String name, String email, String phone, String country, String location, boolean mobility, int remote) {
+    public Student(Long id, String name, String email, String phone, String country, String location, boolean mobility, int remote, Picture picture, Resume resume, Set<Tag> tags, User user) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -65,17 +69,10 @@ public class Student {
         this.location = location;
         this.mobility = mobility;
         this.remote = remote;
-    }
-
-    public Student(String name, String email, String phone, String country, String location, boolean mobility, int remote, Set<Tag> tags) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.country = country;
-        this.location = location;
-        this.mobility = mobility;
-        this.remote = remote;
+        this.picture = picture;
+        this.resume = resume;
         this.tags = tags;
+        this.user = user;
     }
 
     public Long getId() {
@@ -166,6 +163,14 @@ public class Student {
         this.tags = tags;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -180,7 +185,7 @@ public class Student {
                 ", picture=" + picture +
                 ", resume=" + resume +
                 ", tags=" + tags +
+                ", user=" + user +
                 '}';
     }
-
 }

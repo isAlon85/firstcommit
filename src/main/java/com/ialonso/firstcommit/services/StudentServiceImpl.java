@@ -1,7 +1,7 @@
 package com.ialonso.firstcommit.services;
 
 import com.ialonso.firstcommit.entities.Student;
-import com.ialonso.firstcommit.entities.User;
+import com.ialonso.firstcommit.repositories.PictureRepository;
 import com.ialonso.firstcommit.repositories.RoleRepository;
 import com.ialonso.firstcommit.repositories.StudentRepository;
 import com.ialonso.firstcommit.repositories.UserRepository;
@@ -18,17 +18,14 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
-    private final UserRepository userRepository;
 
-    public StudentServiceImpl(StudentRepository studentRepository, UserRepository userRepository){
+    public StudentServiceImpl(StudentRepository studentRepository){
         this.studentRepository = studentRepository;
-        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -39,6 +36,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     CloudinaryServiceImpl cloudinaryServiceImpl;
@@ -65,6 +68,8 @@ public class StudentServiceImpl implements StudentService {
     public ResponseEntity<Student> create(Student student, @CurrentSecurityContext(expression="authentication?.name") String email) {
         if (student.getId() != null)
             return ResponseEntity.badRequest().build();
+        if (student.getUser() != null)
+            return ResponseEntity.badRequest().build();
         if (studentRepository.existsByEmail(student.getEmail()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         if (studentRepository.existsByPhone(student.getPhone()))
@@ -75,12 +80,8 @@ public class StudentServiceImpl implements StudentService {
             return ResponseEntity.badRequest().build();
         if (student.getPhone().length() > 20)
             return ResponseEntity.badRequest().build();
+        student.setUser(userRepository.findByEmail(email).get());
         Student result = studentRepository.save(student);
-        Optional<User> user = userRepository.findByEmail(email);
-        Set<Student> students = user.get().getStudents();
-        students.add(student);
-        user.get().setStudents(students);
-        userRepository.save(user.get());
         return ResponseEntity.ok(result);
     }
 

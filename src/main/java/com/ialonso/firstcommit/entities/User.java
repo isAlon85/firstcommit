@@ -37,16 +37,6 @@ public class User {
 
     private Set<Role> roles;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "USER_STUDENTS",
-            joinColumns = {
-                    @JoinColumn(name = "USER_ID")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "STUDENT_ID") })
-
-    private Set<Student> students;
-
     public User() {
     }
 
@@ -96,14 +86,6 @@ public class User {
         this.roles = roles;
     }
 
-    public Set<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<Student> students) {
-        this.students = students;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -112,7 +94,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
-                ", students=" + students +
                 '}';
     }
 }

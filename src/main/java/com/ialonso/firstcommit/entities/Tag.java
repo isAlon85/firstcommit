@@ -1,11 +1,9 @@
 package com.ialonso.firstcommit.entities;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@Entity
 public class Tag {
 
     @Id
@@ -25,6 +23,12 @@ public class Tag {
     }
 
     public Tag(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Tag(Long id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }

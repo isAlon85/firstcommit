@@ -38,10 +38,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public ResponseEntity<Tag> create(Tag tag) {
-        if (tag.getId() != null)
+        /*if (tag.getId() != null)
             return ResponseEntity.badRequest().build();
         if (tagRepository.existsByName(tag.getName()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();*/
         Tag result = tagRepository.save(tag);
         return ResponseEntity.ok(result);
     }

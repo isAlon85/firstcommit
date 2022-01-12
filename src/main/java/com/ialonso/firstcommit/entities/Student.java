@@ -44,7 +44,7 @@ public class Student {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Resume resume;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "STUDENT_TAGS",
             joinColumns = {
                     @JoinColumn(name = "STUDENT_ID")

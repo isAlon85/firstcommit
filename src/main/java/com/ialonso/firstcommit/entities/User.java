@@ -27,6 +27,7 @@ public class User {
     @Size(max = 48)
     private String email;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "USER_ROLES",
             joinColumns = {

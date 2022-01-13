@@ -17,6 +17,8 @@ INSERT INTO picture(url, cloudinary_id) VALUES ('https://res.cloudinary.com/ialo
 INSERT INTO picture(url, cloudinary_id) VALUES ('https://res.cloudinary.com/ialons85/image/upload/v1641943720/plobaton_ob.com90_nuyla7.jpg' , 'plobaton_ob.com90_nuyla7');
 INSERT INTO student(name, email, phone, country, location, mobility, remote, picture_id, resume_id, user_id) VALUES ('Dwight Schrute', 'dschrute@ob.com', '+1 570-348-4100', 'Estados Unidos', 'Scranton', true, 0, 1, 1, 1);
 INSERT INTO student(name, email, phone, country, location, mobility, remote, picture_id, resume_id, user_id) VALUES ('Paco Lobaton', 'plobaton@ob.com', '+34 652318997', 'España', 'Jerez de la Frontera', true, 1, 2, 2, 1);
+INSERT INTO student(name, email, phone, country, location, mobility, remote, picture_id, resume_id, user_id) VALUES ('Ibai Llanos', 'illanos@ob.com', '+34 657895886', 'España', 'Bilbao', false, 1, null, null, 1);
+INSERT INTO student(name, email, phone, country, location, mobility, remote, picture_id, resume_id, user_id) VALUES ('Matías Prats', 'mprats@ob.com', '+34 611234054', 'España', 'Madrid', false, 0, null, null, 1);
 INSERT INTO student_tags(student_id, tag_id) VALUES (1 , 1);
 INSERT INTO student_tags(student_id, tag_id) VALUES (1 , 2);
 INSERT INTO student_tags(student_id, tag_id) VALUES (1 , 3);
@@ -25,4 +27,7 @@ INSERT INTO student_tags(student_id, tag_id) VALUES (1 , 7);
 INSERT INTO student_tags(student_id, tag_id) VALUES (2 , 5);
 INSERT INTO student_tags(student_id, tag_id) VALUES (2 , 6);
 INSERT INTO student_tags(student_id, tag_id) VALUES (2 , 8);
+INSERT INTO student_tags(student_id, tag_id) VALUES (3 , 3);
+INSERT INTO student_tags(student_id, tag_id) VALUES (3 , 7);
+INSERT INTO student_tags(student_id, tag_id) VALUES (4 , 2);
 

@@ -1,10 +1,10 @@
 package com.ialonso.firstcommit.services;
 
+import com.ialonso.firstcommit.entities.Picture;
+import com.ialonso.firstcommit.entities.Resume;
 import com.ialonso.firstcommit.entities.Student;
-import com.ialonso.firstcommit.repositories.PictureRepository;
-import com.ialonso.firstcommit.repositories.RoleRepository;
-import com.ialonso.firstcommit.repositories.StudentRepository;
-import com.ialonso.firstcommit.repositories.UserRepository;
+import com.ialonso.firstcommit.entities.Tag;
+import com.ialonso.firstcommit.repositories.*;
 import com.ialonso.firstcommit.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +15,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -38,7 +36,13 @@ public class StudentServiceImpl implements StudentService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
     private PictureRepository pictureRepository;
+
+    @Autowired
+    private ResumeRepository resumeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -62,6 +66,14 @@ public class StudentServiceImpl implements StudentService {
             return ResponseEntity.ok(regStudentOpt.get());
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public ResponseEntity<List<Student>> findByRemote(Integer remote){
+        if (studentRepository.findByRemote(remote).size() == 0)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(studentRepository.findByRemote(remote));
     }
 
     @Override
@@ -93,7 +105,29 @@ public class StudentServiceImpl implements StudentService {
                 Field field = ReflectionUtils.findField(Student.class, (String) key);
                 assert field != null;
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, student.get(), value);
+                if (key == "picture") {
+                    LinkedHashMap map = (LinkedHashMap)value;
+                    Integer idInt = (Integer) map.get("id");
+                    Long idPicture = Long.valueOf(idInt);
+                    Picture picture = pictureRepository.getById(idPicture);
+                    student.get().setPicture(picture);
+                } else if (key == "resume") {
+                    LinkedHashMap map = (LinkedHashMap)value;
+                    Integer idInt = (Integer) map.get("id");
+                    Long idResume = Long.valueOf(idInt);
+                    Resume resume = resumeRepository.getById(idResume);
+                    student.get().setResume(resume);
+                } else if (key == "tags") {
+                    Set<Tag> set = new HashSet<>();
+                    for (LinkedHashMap tag : ((ArrayList<LinkedHashMap>) value)) {
+                        Integer idInt = (Integer) tag.get("id");
+                        Long idTag = Long.valueOf(idInt);
+                        set.add(tagRepository.getById(idTag));
+                    }
+                    student.get().setTags(set);
+                } else {
+                    ReflectionUtils.setField(field, student.get(), value);
+                }
             });
             Student result = studentRepository.save(student.get());
             return ResponseEntity.ok(result);

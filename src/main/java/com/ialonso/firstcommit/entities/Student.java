@@ -1,5 +1,7 @@
 package com.ialonso.firstcommit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Set;
@@ -44,7 +46,7 @@ public class Student {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Resume resume;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "STUDENT_TAGS",
             joinColumns = {
                     @JoinColumn(name = "STUDENT_ID")
@@ -54,6 +56,7 @@ public class Student {
 
     private Set<Tag> tags;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private User user;
 

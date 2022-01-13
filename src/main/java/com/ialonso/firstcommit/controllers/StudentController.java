@@ -31,8 +31,14 @@ public class StudentController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(ROOT + "/students")
     @ApiOperation("Find all Students in DB")
-    public ResponseEntity<List<Student>> findAll() {
-        return studentService.findAll();
+    public ResponseEntity<List<Student>> findAll(@RequestParam(required = false) Integer remote) {
+        if (remote == null)
+            return studentService.findAll();
+        if (remote == 0 || remote == 1) {
+            return studentService.findByRemote(remote);
+        } else {
+            return studentService.findAll();
+        }
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

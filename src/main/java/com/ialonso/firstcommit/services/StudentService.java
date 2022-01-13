@@ -14,6 +14,8 @@ public interface StudentService {
 
     ResponseEntity<Student> findOneById(Long id);
 
+    ResponseEntity<List<Student>> findByRemote(Integer remote);
+
     ResponseEntity<Student> create(Student student, @CurrentSecurityContext(expression="authentication?.name") String email);
 
     ResponseEntity<Student> patch(Long id, Map<Object, Object> fields) throws IOException;

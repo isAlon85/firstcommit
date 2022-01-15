@@ -5,10 +5,10 @@ import com.ialonso.firstcommit.entities.User;
 import com.ialonso.firstcommit.repositories.RoleRepository;
 import com.ialonso.firstcommit.repositories.UserRepository;
 import com.ialonso.firstcommit.security.jwt.JwtTokenUtil;
-import com.ialonso.firstcommit.security.payload.JwtResponse;
-import com.ialonso.firstcommit.security.payload.LoginRequest;
-import com.ialonso.firstcommit.security.payload.MessageResponse;
-import com.ialonso.firstcommit.security.payload.RegisterRequest;
+import com.ialonso.firstcommit.security.payload.*;
+import com.sparkpost.Client;
+import com.sparkpost.exception.SparkPostException;
+import com.sparkpost.transport.IRestConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +112,26 @@ public class UserServiceImpl implements UserService {
         String jwt = jwtTokenUtil.generateToken(authentication);
         Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
         return ResponseEntity.ok(new JwtResponse(jwt, user.get().getUsername(), user.get().getRoles()));
+    }
+
+    @Override
+    public ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException {
+        String API_KEY = "c3df3cd523fdd690bf045ed975dfffcf18f5159e";
+        Client client = new Client(API_KEY, IRestConnection.SPC_EU_ENDPOINT);
+        Optional<User> user = userRepository.findByEmail(forgot.getEmail());
+        if (user.isPresent()) {
+            client.sendMessage(
+                    "pwdrecovery@control.obalonso.es",
+                    forgot.getEmail(),
+                    "Password Recovery",
+                    "This is a password recovery email from First Commit API",
+                    "<p>To recover your password click <a href=\"http://localhost:3000/recover/"
+                            + user.get().getId() + "\">here</a></p>");
+            User result = userRepository.save(user.get());
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

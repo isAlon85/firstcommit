@@ -1,10 +1,8 @@
 package com.ialonso.firstcommit.services;
 
 import com.ialonso.firstcommit.entities.User;
-import com.ialonso.firstcommit.security.payload.JwtResponse;
-import com.ialonso.firstcommit.security.payload.LoginRequest;
-import com.ialonso.firstcommit.security.payload.MessageResponse;
-import com.ialonso.firstcommit.security.payload.RegisterRequest;
+import com.ialonso.firstcommit.security.payload.*;
+import com.sparkpost.exception.SparkPostException;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -20,6 +18,8 @@ public interface UserService {
     ResponseEntity<MessageResponse> register(RegisterRequest request);
 
     ResponseEntity<JwtResponse> login(LoginRequest request);
+
+    ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException;
 
     ResponseEntity<User> patch(Long id, Map<Object, Object> fields) throws IOException;
 

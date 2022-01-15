@@ -2,11 +2,9 @@ package com.ialonso.firstcommit.controllers;
 
 import com.ialonso.firstcommit.entities.User;
 import com.ialonso.firstcommit.security.jwt.JwtTokenUtil;
-import com.ialonso.firstcommit.security.payload.JwtResponse;
-import com.ialonso.firstcommit.security.payload.LoginRequest;
-import com.ialonso.firstcommit.security.payload.MessageResponse;
-import com.ialonso.firstcommit.security.payload.RegisterRequest;
+import com.ialonso.firstcommit.security.payload.*;
 import com.ialonso.firstcommit.services.UserServiceImpl;
+import com.sparkpost.exception.SparkPostException;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +70,13 @@ public class UserController {
     @ApiOperation("Login with a JSON")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
         ResponseEntity<JwtResponse> result = userService.login(loginRequest);
+        return result;
+    }
+
+    @PostMapping(ROOT + "/auth/forgot")
+    @ApiOperation("Login with a JSON")
+    public ResponseEntity<User> forgot(@RequestBody ForgotRequest forgotRequest) throws SparkPostException {
+        ResponseEntity<User> result = userService.forgot(forgotRequest);
         return result;
     }
 

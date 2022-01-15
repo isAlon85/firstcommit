@@ -30,6 +30,9 @@ public class StudentServiceImpl implements StudentService {
     private RoleService roleService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -92,6 +95,9 @@ public class StudentServiceImpl implements StudentService {
             return ResponseEntity.badRequest().build();
         if (student.getPhone().length() > 20)
             return ResponseEntity.badRequest().build();
+        if (!UserServiceImpl.validateMail(student.getEmail())) {
+            return ResponseEntity.badRequest().build();
+        }
         student.setUser(userRepository.findByEmail(email).get());
         Student result = studentRepository.save(student);
         return ResponseEntity.ok(result);
@@ -100,6 +106,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseEntity<Student> patch(Long id, Map<Object, Object> fields) throws IOException {
         Optional<Student> student = studentRepository.findById(id);
+        String email = studentRepository.findById(id).get().getEmail();
         if (student.isPresent()) {
             fields.forEach((key, value) -> {
                 Field field = ReflectionUtils.findField(Student.class, (String) key);
@@ -129,6 +136,10 @@ public class StudentServiceImpl implements StudentService {
                     ReflectionUtils.setField(field, student.get(), value);
                 }
             });
+            if (!UserServiceImpl.validateMail(student.get().getEmail())) {
+                student.get().setEmail(email);
+                return ResponseEntity.badRequest().build();
+            }
             Student result = studentRepository.save(student.get());
             return ResponseEntity.ok(result);
         }

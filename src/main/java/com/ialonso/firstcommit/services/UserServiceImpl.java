@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
                     .status(HttpStatus.CONFLICT)
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
-        if (signUpRequest.getEmail().contains("@")) {
+        if (!validateMail(signUpRequest.getEmail())) {
             // Create new user's account
             User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), signUpRequest.getEmail());
 
@@ -129,12 +131,10 @@ public class UserServiceImpl implements UserService {
             if (!Objects.equals(user.get().getPassword(), password)) {
                 user.get().setPassword(encoder.encode(user.get().getPassword()));
             }
-            if (!user.get().getEmail().contains("@")) {
+            if (!validateMail(user.get().getEmail())) {
                 user.get().setEmail(email);
-                user.get().setUsername(email);
                 return ResponseEntity.badRequest().build();
             }
-            user.get().setUsername(user.get().getEmail());
             Set<Role> roleUser =new HashSet<>();
             roleUser.add(roleRepository.findRoleByName("USER"));
             user.get().setRoles(roleUser);
@@ -178,6 +178,15 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok(regUserOpt.get());
         else
             return ResponseEntity.notFound().build();
+    }
+
+    public static boolean validateMail(String email) {
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        Matcher mather = pattern.matcher(email);
+        return mather.find();
     }
 
 }

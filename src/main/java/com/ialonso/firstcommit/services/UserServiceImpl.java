@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
                     "Password Recovery",
                     "This is a password recovery email from First Commit API",
                     "To complete the password reset process, please click here: "
-                            + "http://localhost:3000/recover?token=" + token);
+                            + "http://localhost:3000/recover/" + token);
             return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.notFound().build();

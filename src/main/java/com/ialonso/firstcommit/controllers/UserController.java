@@ -74,9 +74,16 @@ public class UserController {
     }
 
     @PostMapping(ROOT + "/auth/forgot")
-    @ApiOperation("Login with a JSON")
+    @ApiOperation("Password forgotten")
     public ResponseEntity<User> forgot(@RequestBody ForgotRequest forgotRequest) throws SparkPostException {
         ResponseEntity<User> result = userService.forgot(forgotRequest);
+        return result;
+    }
+
+    @PostMapping(ROOT + "/auth/recover")
+    @ApiOperation("Recover a password with a JSON")
+    public ResponseEntity<User> recover(@RequestParam("token") String token, @RequestBody Map<Object, Object> fields) throws IOException {
+        ResponseEntity<User> result = userService.recover(token, fields);
         return result;
     }
 

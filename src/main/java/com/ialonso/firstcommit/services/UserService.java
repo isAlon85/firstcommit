@@ -21,6 +21,8 @@ public interface UserService {
 
     ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException;
 
+    ResponseEntity<User> recover(String token, Map<Object, Object> fields) throws IOException;
+
     ResponseEntity<User> patch(Long id, Map<Object, Object> fields) throws IOException;
 
     ResponseEntity delete(Long id);

@@ -1,7 +1,9 @@
 package com.ialonso.firstcommit.services;
 
+import com.ialonso.firstcommit.entities.PasswordResetToken;
 import com.ialonso.firstcommit.entities.Role;
 import com.ialonso.firstcommit.entities.User;
+import com.ialonso.firstcommit.repositories.PasswordTokenRepository;
 import com.ialonso.firstcommit.repositories.RoleRepository;
 import com.ialonso.firstcommit.repositories.UserRepository;
 import com.ialonso.firstcommit.security.jwt.JwtTokenUtil;
@@ -51,6 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
@@ -116,21 +121,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException {
+        Optional<User> user = userRepository.findByEmail(forgot.getEmail());
         String API_KEY = "c3df3cd523fdd690bf045ed975dfffcf18f5159e";
         Client client = new Client(API_KEY, IRestConnection.SPC_EU_ENDPOINT);
-        Optional<User> user = userRepository.findByEmail(forgot.getEmail());
         if (user.isPresent()) {
+            String token = UUID.randomUUID().toString();
+            createPasswordResetTokenForUser(user.get(), token);
             client.sendMessage(
                     "pwdrecovery@control.obalonso.es",
                     forgot.getEmail(),
                     "Password Recovery",
                     "This is a password recovery email from First Commit API",
-                    "<p>To recover your password click <a href=\"http://localhost:3000/recover/"
-                            + user.get().getId() + "\">here</a></p>");
-            User result = userRepository.save(user.get());
-            return ResponseEntity.ok(result);
+                    "To complete the password reset process, please click here: "
+                            + "http://localhost:3000/recover?token=" + token);
+            return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<User> recover(String token, Map<Object, Object> fields) throws IOException {
+        boolean result = validatePasswordResetToken(token);
+        if (result) {
+            PasswordResetToken resetToken = passwordTokenRepository.findByToken(token);
+            Optional<User> user = userRepository.findById(resetToken.getUser().getId());
+            if (user.isPresent()) {
+                patch(user.get().getId(),fields);
+                return ResponseEntity.ok(user.get());
+            }
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -207,6 +229,28 @@ public class UserServiceImpl implements UserService {
 
         Matcher mather = pattern.matcher(email);
         return mather.find();
+    }
+
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(myToken);
+    }
+
+    public boolean validatePasswordResetToken(String token) {
+        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+
+        return !isTokenFound(passToken) ? false
+                : isTokenExpired(passToken) ? false
+                : true;
+    }
+
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        final Calendar cal = Calendar.getInstance();
+        return passToken.getExpiryDate().before(cal.getTime());
     }
 
 }

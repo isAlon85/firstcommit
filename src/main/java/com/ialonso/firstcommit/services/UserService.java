@@ -13,6 +13,8 @@ public interface UserService {
 
     ResponseEntity<List<User>> findAll();
 
+    ResponseEntity<User> findByUsername(String username);
+
     ResponseEntity<User> findOneById(Long id);
 
     ResponseEntity<MessageResponse> register(RegisterRequest request);

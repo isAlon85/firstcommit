@@ -46,6 +46,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping(ROOT + "/user")
+    @ApiOperation("Find User by username in DB")
+    public ResponseEntity<User> findAll(@RequestParam(required = true) String username) {
+        return userService.findByUsername(username);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(ROOT + "/user/" + "{id}")
     @ApiOperation("Find a User in DB by ID")
     public ResponseEntity<User> findOneById(@PathVariable Long id) {

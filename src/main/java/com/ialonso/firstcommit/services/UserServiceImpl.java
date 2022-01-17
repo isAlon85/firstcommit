@@ -2,6 +2,7 @@ package com.ialonso.firstcommit.services;
 
 import com.ialonso.firstcommit.entities.PasswordResetToken;
 import com.ialonso.firstcommit.entities.Role;
+import com.ialonso.firstcommit.entities.Student;
 import com.ialonso.firstcommit.entities.User;
 import com.ialonso.firstcommit.repositories.PasswordTokenRepository;
 import com.ialonso.firstcommit.repositories.RoleRepository;
@@ -69,6 +70,15 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @Override
+    public ResponseEntity<User> findByUsername(String username){
+        if (userRepository.findByUsername(username).isPresent()) {
+            return ResponseEntity.ok(userRepository.findByUsername(username).get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

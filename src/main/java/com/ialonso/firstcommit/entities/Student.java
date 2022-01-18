@@ -56,7 +56,6 @@ public class Student {
 
     private Set<Tag> tags;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private User user;
 

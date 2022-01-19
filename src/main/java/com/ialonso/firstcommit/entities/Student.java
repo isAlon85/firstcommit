@@ -47,6 +47,7 @@ public class Student {
     private Resume resume;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @OrderBy("id ASC")
     @JoinTable(name = "STUDENT_TAGS",
             joinColumns = {
                     @JoinColumn(name = "STUDENT_ID")

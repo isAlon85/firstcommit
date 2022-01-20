@@ -57,6 +57,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseEntity<List<Student>> findAll(String country, String location, Boolean mobility, Integer remote){
+        /*Set<Tag> setTags = new HashSet<>();
+        Tag tag = tagRepository.findTagById(Long.valueOf(tags));
+        setTags.add(tag);
+        System.out.println(setTags);
+        /*if (tags != null) {
+            for (Integer tag : tags) {
+                setTags.add(tagRepository.getById(Long.valueOf(tag)));
+            }
+        }*/
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Example<Student> studentQuery = Example.of(new Student(null,null,null,null,country,location,mobility,remote,null,null,null,null), matcher);
         List<Student> results = studentRepository.findAll(studentQuery);
@@ -68,7 +77,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseEntity<Student> findOneById(Long id){
         Optional<Student> regStudentOpt = studentRepository.findById(id);
-
         if (regStudentOpt.isPresent())
             return ResponseEntity.ok(regStudentOpt.get());
         else

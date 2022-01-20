@@ -1,6 +1,7 @@
 package com.ialonso.firstcommit.controllers;
 
 import com.ialonso.firstcommit.entities.Student;
+import com.ialonso.firstcommit.entities.Tag;
 import com.ialonso.firstcommit.services.StudentServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -13,8 +14,10 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class StudentController {

@@ -7,6 +7,8 @@ import com.ialonso.firstcommit.entities.Tag;
 import com.ialonso.firstcommit.repositories.*;
 import com.ialonso.firstcommit.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -54,11 +56,13 @@ public class StudentServiceImpl implements StudentService {
     CloudinaryServiceImpl cloudinaryServiceImpl;
 
     @Override
-    public ResponseEntity<List<Student>> findAll(){
-        if (studentRepository.count() == 0)
+    public ResponseEntity<List<Student>> findAll(String country, String location, Boolean mobility, Integer remote){
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
+        Example<Student> studentQuery = Example.of(new Student(null,null,null,null,country,location,mobility,remote,null,null,null,null), matcher);
+        List<Student> results = studentRepository.findAll(studentQuery);
+        if (results.size() == 0)
             return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(studentRepository.findAll());
+        return ResponseEntity.ok(results);
     }
 
     @Override
@@ -69,14 +73,6 @@ public class StudentServiceImpl implements StudentService {
             return ResponseEntity.ok(regStudentOpt.get());
         else
             return ResponseEntity.notFound().build();
-    }
-
-    @Override
-    public ResponseEntity<List<Student>> findByRemote(Integer remote){
-        if (studentRepository.findByRemote(remote).size() == 0)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(studentRepository.findByRemote(remote));
     }
 
     @Override

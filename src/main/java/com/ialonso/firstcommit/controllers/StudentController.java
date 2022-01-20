@@ -31,14 +31,11 @@ public class StudentController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(ROOT + "/students")
     @ApiOperation("Find all Students in DB")
-    public ResponseEntity<List<Student>> findAll(@RequestParam(required = false) Integer remote) {
-        if (remote == null)
-            return studentService.findAll();
-        if (remote == 0 || remote == 1) {
-            return studentService.findByRemote(remote);
-        } else {
-            return studentService.findAll();
-        }
+    public ResponseEntity<List<Student>> findAll(@RequestParam(required = false) Integer remote,
+                                                 @RequestParam(required = false) Boolean mobility,
+                                                 @RequestParam(required = false) String country,
+                                                 @RequestParam(required = false) String location) {
+        return studentService.findAll(country, location, mobility, remote);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

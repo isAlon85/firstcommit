@@ -10,11 +10,9 @@ import java.util.Map;
 
 public interface StudentService {
 
-    ResponseEntity<List<Student>> findAll();
+    ResponseEntity<List<Student>> findAll(String country, String location, Boolean mobility, Integer remote);
 
     ResponseEntity<Student> findOneById(Long id);
-
-    ResponseEntity<List<Student>> findByRemote(Integer remote);
 
     ResponseEntity<Student> create(Student student, @CurrentSecurityContext(expression="authentication?.name") String email);
 

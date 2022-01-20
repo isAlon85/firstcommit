@@ -1,7 +1,5 @@
 package com.ialonso.firstcommit.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Set;
@@ -35,10 +33,10 @@ public class Student {
     private String location;
 
     @Column (nullable = false)
-    private boolean mobility;
+    private Boolean mobility;
 
     @Column (nullable = false)
-    private int remote;
+    private Integer remote;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Picture picture;
@@ -63,7 +61,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(Long id, String name, String email, String phone, String country, String location, boolean mobility, int remote, Picture picture, Resume resume, Set<Tag> tags, User user) {
+    public Student(Long id, String name, String email, String phone, String country, String location, Boolean mobility, Integer remote, Picture picture, Resume resume, Set<Tag> tags, User user) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -126,7 +124,7 @@ public class Student {
         this.location = location;
     }
 
-    public boolean isMobility() {
+    public Boolean isMobility() {
         return mobility;
     }
 
@@ -134,7 +132,7 @@ public class Student {
         this.mobility = mobility;
     }
 
-    public int getRemote() {
+    public Integer getRemote() {
         return remote;
     }
 

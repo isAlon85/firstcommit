@@ -9,6 +9,7 @@ import com.ialonso.firstcommit.repositories.PictureRepository;
 import com.ialonso.firstcommit.repositories.ResumeRepository;
 import com.ialonso.firstcommit.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,15 @@ import java.util.Optional;
 
 @Service
 public class CloudinaryServiceImpl implements CloudinaryService{
+
+    @Value("${cloudinaryname}")
+    private String cloudinaryName;
+
+    @Value("${cloudinarkey}")
+    private String cloudinaryKey;
+
+    @Value("${cloudinarysecret}")
+    private String cloudinarySecret;
 
     Cloudinary cloudinary;
 
@@ -37,9 +47,10 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     private Map<String, String> valuesMap = new HashMap<>();
 
     public CloudinaryServiceImpl(){
-        valuesMap.put("cloud_name", "ialons85");
-        valuesMap.put("api_key", "447823371496323");
-        valuesMap.put("api_secret", "jTHbasQY_F-SouuoIFqQBTGMEqk");
+
+        valuesMap.put("cloud_name", cloudinaryName);
+        valuesMap.put("api_key", cloudinaryKey);
+        valuesMap.put("api_secret", cloudinarySecret);
         cloudinary = new Cloudinary(valuesMap);
     }
 

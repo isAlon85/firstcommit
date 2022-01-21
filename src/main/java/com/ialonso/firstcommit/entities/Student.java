@@ -8,6 +8,7 @@ import java.util.Set;
 public class Student {
 
     @Id
+    @OrderBy("id ASC")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;

@@ -103,15 +103,13 @@ public class StudentServiceImpl implements StudentService {
             return ResponseEntity.badRequest().build();
         }
         student.setUser(userRepository.findByEmail(email).get());
-        Long pictureId = student.getPicture().getId();
-        Long resumeId = student.getResume().getId();
-        student.setPicture(null);
-        student.setResume(null);
         if (student.getPicture() != null) {
+            Long pictureId = student.getPicture().getId();
             Picture picture = pictureRepository.getById(pictureId);
             student.setPicture(picture);
         }
         if (student.getResume() != null) {
+            Long resumeId = student.getResume().getId();
             Resume resume = resumeRepository.getById(resumeId);
             student.setResume(resume);
         }

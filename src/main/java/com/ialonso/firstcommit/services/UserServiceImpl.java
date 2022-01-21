@@ -13,6 +13,7 @@ import com.sparkpost.Client;
 import com.sparkpost.exception.SparkPostException;
 import com.sparkpost.transport.IRestConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${sparkpostkey}")
+    private String sparkpostKey;
 
     private final AuthenticationManager authManager;
     private final UserRepository userRepository;
@@ -132,7 +136,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException {
         Optional<User> user = userRepository.findByEmail(forgot.getEmail());
-        String API_KEY = "c3df3cd523fdd690bf045ed975dfffcf18f5159e";
+        String API_KEY = sparkpostKey;
         Client client = new Client(API_KEY, IRestConnection.SPC_EU_ENDPOINT);
         if (user.isPresent()) {
             String token = UUID.randomUUID().toString();

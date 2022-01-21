@@ -27,7 +27,7 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     @Value("${cloudinaryname}")
     private String cloudinaryName;
 
-    @Value("${cloudinarkey}")
+    @Value("${cloudinarykey}")
     private String cloudinaryKey;
 
     @Value("${cloudinarysecret}")

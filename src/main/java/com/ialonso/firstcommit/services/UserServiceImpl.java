@@ -2,7 +2,6 @@ package com.ialonso.firstcommit.services;
 
 import com.ialonso.firstcommit.entities.PasswordResetToken;
 import com.ialonso.firstcommit.entities.Role;
-import com.ialonso.firstcommit.entities.Student;
 import com.ialonso.firstcommit.entities.User;
 import com.ialonso.firstcommit.repositories.PasswordTokenRepository;
 import com.ialonso.firstcommit.repositories.RoleRepository;
@@ -35,8 +34,8 @@ import java.util.regex.Pattern;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Value("${sparkpostkey}")
-    private String sparkpostKey;
+    @Value("${SPARKPOST_KEY}")
+    private String SPARKPOST_KEY;
 
     private final AuthenticationManager authManager;
     private final UserRepository userRepository;
@@ -136,7 +135,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<User> forgot(ForgotRequest forgot) throws SparkPostException {
         Optional<User> user = userRepository.findByEmail(forgot.getEmail());
-        String API_KEY = sparkpostKey;
+        String API_KEY = SPARKPOST_KEY;
         Client client = new Client(API_KEY, IRestConnection.SPC_EU_ENDPOINT);
         if (user.isPresent()) {
             String token = UUID.randomUUID().toString();

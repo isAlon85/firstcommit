@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,14 +25,14 @@ import java.util.Optional;
 @Service
 public class CloudinaryServiceImpl implements CloudinaryService{
 
-    @Value("${cloudinaryname}")
-    private String cloudinaryName;
+    @Value("${CLOUDINARY_NAME}")
+    public String CLOUDINARY_NAME;
 
-    @Value("${cloudinarykey}")
-    private String cloudinaryKey;
+    @Value("${CLOUDINARY_KEY}")
+    public String CLOUDINARY_KEY;
 
-    @Value("${cloudinarysecret}")
-    private String cloudinarySecret;
+    @Value("${CLOUDINARY_SECRET}")
+    public String CLOUDINARY_SECRET;
 
     Cloudinary cloudinary;
 
@@ -46,11 +47,14 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 
     private Map<String, String> valuesMap = new HashMap<>();
 
-    public CloudinaryServiceImpl(){
+    public CloudinaryServiceImpl() {
+    }
 
-        valuesMap.put("cloud_name", cloudinaryName);
-        valuesMap.put("api_key", cloudinaryKey);
-        valuesMap.put("api_secret", cloudinarySecret);
+    @PostConstruct
+    public void PostConstruct(){
+        valuesMap.put("cloud_name", CLOUDINARY_NAME);
+        valuesMap.put("api_key", CLOUDINARY_KEY);
+        valuesMap.put("api_secret", CLOUDINARY_SECRET);
         cloudinary = new Cloudinary(valuesMap);
     }
 
